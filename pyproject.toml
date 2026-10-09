@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blendkeep"
+version = "0.1.0"
+description = "Blender の .blend ファイルを保存のたびに自動で履歴化する Windows 常駐アプリ（アドオン不要）"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+dependencies = ["watchdog>=4.0", "zstandard>=0.22"]
+
+[project.optional-dependencies]
+gui = ["PySide6>=6.6"]
+dev = ["pytest>=8", "pytest-timeout>=2.3", "ruff>=0.5"]
+
+[project.scripts]
+blendkeep = "blendkeep.cli:main"
+
+[project.gui-scripts]
+blendkeep-gui = "blendkeep.gui.app:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+"blendkeep.blender" = ["*.py"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+# 止まったテストは、全スレッドの状況を出して失敗にする。
+timeout = 90
+timeout_method = "thread"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]

@@ -50,7 +50,7 @@ Watches your folders, keeps a thumbnail-browsable history, stores big files as d
 
 ## 公開する手順（リポジトリの設定だけ）
 
-0. GitHub のリポジトリ → Releases → Draft a new release → Choose a tag に `v0.1.0` と入力して「Create new tag」→ Target は `main` → Publish release。
+0. GitHub のリポジトリ → Releases → Draft a new release → Choose a tag に `v0.1.0` と入力して「Create new tag」→ Target は `main` → Publish release。説明欄には `docs/release-notes/v0.1.0.md` の中身を貼る。
    タグが作られると、自動で配布物のビルドが走り（約5分）、zip と .sha256 が同じ Release に付きます（Actions の Release が緑になるまで待つ）
 1. GitHub のリポジトリ → Settings → General → 一番下の Danger Zone → **Change visibility** → Public
 2. 同じ画面の上のほうの About（歯車）に、上の説明文と Topics を貼る

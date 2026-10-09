@@ -69,6 +69,19 @@ jobs:
       - name: GitHub Releases に載せる（タグのときだけ）
         if: github.ref_type == 'tag'
         shell: pwsh
-        run: gh release create "$env:GITHUB_REF_NAME" "$env:ZIP_NAME" "$env:ZIP_NAME.sha256" --title "$env:GITHUB_REF_NAME" --generate-notes
+        run: |
+          # Web 画面で先に Release を作ってあれば、配布物を足す。無ければ、ここで作る。
+          gh release view "$env:GITHUB_REF_NAME" *> $null
+          if ($LASTEXITCODE -eq 0) {
+            gh release upload "$env:GITHUB_REF_NAME" "$env:ZIP_NAME" "$env:ZIP_NAME.sha256" --clobber
+          } else {
+            $notes = "docs/release-notes/$env:GITHUB_REF_NAME.md"
+            if (Test-Path $notes) {
+              gh release create "$env:GITHUB_REF_NAME" "$env:ZIP_NAME" "$env:ZIP_NAME.sha256" --title "$env:GITHUB_REF_NAME" --notes-file $notes
+            } else {
+              gh release create "$env:GITHUB_REF_NAME" "$env:ZIP_NAME" "$env:ZIP_NAME.sha256" --title "$env:GITHUB_REF_NAME" --generate-notes
+            }
+          }
+          if ($LASTEXITCODE -ne 0) { throw "release failed" }
         env:
           GH_TOKEN: ${{ github.token }}
